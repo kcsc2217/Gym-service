@@ -23,6 +23,9 @@ public class Gym extends BaseEntity{
     @OneToMany(mappedBy = "gym")
     List<Review> rivewlist = new ArrayList<>();
 
+    @OneToMany(mappedBy = "gym")
+    List<UserGym> userGymList = new ArrayList<>();
+
 
 
     @Embedded

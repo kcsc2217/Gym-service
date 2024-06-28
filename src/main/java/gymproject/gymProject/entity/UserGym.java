@@ -25,6 +25,22 @@ public class UserGym extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private MemberShip memberShip;
 
+    public UserGym(Member member, Gym gym, MemberShip memberShip) {
+        setMember(member);
+        setGym(gym);
+        this.memberShip = memberShip;
+    }
+
+    public void setMember(Member member){ // 멤버 연관 관계 메서드
+        this.member = member;
+        member.getUserGymList().add(this);
+    }
+
+    public void setGym(Gym gym){ // gym 연관 관계 메서드
+        this.gym = gym;
+        gym.getUserGymList().add(this);
+    }
+
 
 
 }

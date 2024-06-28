@@ -44,6 +44,9 @@ public class Member extends BaseEntity{
     @OneToMany(mappedBy = "member")
     private List<Review> rivewlist = new ArrayList<>();  //내가 쓴 리뷰 보기
 
+    @OneToMany(mappedBy = "member")
+    private List<UserGym> userGymList = new ArrayList<>();
+
     public Member(String username, String password, String email, String phoneNumber, Role role) {
         this.username = username;
         this.password = password;
