@@ -2,10 +2,13 @@ package gymproject.gymProject.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class Like extends BaseEntity {
 
@@ -23,4 +26,9 @@ public class Like extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+
+    public Like(Review review, Member member) {
+        this.review = review;
+        this.member = member;
+    }
 }

@@ -5,10 +5,16 @@ import gymproject.gymProject.entity.Enum.Gender;
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.entity.address.Address;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity{
 
     @Id
@@ -35,6 +41,8 @@ public class Member extends BaseEntity{
     @OneToOne(mappedBy = "member")
     private Profile profile;
 
+    @OneToMany(mappedBy = "member")
+    private List<Review> rivewlist = new ArrayList<>();  //내가 쓴 리뷰 보기
 
     public Member(String username, String password, String email, String phoneNumber, Role role) {
         this.username = username;

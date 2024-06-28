@@ -4,6 +4,9 @@ import gymproject.gymProject.entity.address.Address;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Gym extends BaseEntity{
@@ -17,11 +20,17 @@ public class Gym extends BaseEntity{
 
     private String contact_info;
 
+    @OneToMany(mappedBy = "gym")
+    List<Review> rivewlist = new ArrayList<>();
+
+
 
     @Embedded
     private Address address;
 
     private String operating_our;
+
+
 
 
 

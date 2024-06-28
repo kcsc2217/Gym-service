@@ -2,11 +2,13 @@ package gymproject.gymProject.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review extends BaseEntity{
 
     @Id
@@ -26,6 +28,27 @@ public class Review extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gym_id")
     private Gym gym;
+
+    public Review(String content, int rating, Member member, Gym gym) {
+        this.content = content;
+        this.rating = rating;
+        setMember(member);
+        setGym(gym);
+    }
+
+    public void setMember(Member member){
+        this.member = member;
+        member.getRivewlist().add(this);
+    }
+
+    public void setGym(Gym gym){
+        this.gym = gym;
+        gym.getRivewlist().add(this);
+    }
+
+
+
+
 
 
 }

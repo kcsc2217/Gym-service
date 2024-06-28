@@ -3,10 +3,11 @@ package gymproject.gymProject.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-
+@NoArgsConstructor
 public class GymImage {
 
     @Id
@@ -19,6 +20,8 @@ public class GymImage {
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
-
-
+    public GymImage(String imagePath, Gym gym) {
+        this.imagePath = imagePath;
+        this.gym = gym;
+    }
 }

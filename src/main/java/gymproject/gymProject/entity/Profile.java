@@ -3,10 +3,13 @@ package gymproject.gymProject.entity;
 
 import gymproject.gymProject.entity.Enum.ExerciseIntensity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Profile extends BaseEntity {
 
     @Id
@@ -25,16 +28,16 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Profile(int age, String exercise_goal, ExerciseIntensity exerciseIntensity) {
+    public Profile(int age, String exercise_goal, ExerciseIntensity exerciseIntensity, Member member) {
         this.age = age;
         this.exercise_goal = exercise_goal;
         this.exerciseIntensity = exerciseIntensity;
-
+        setMember(member);
     }
 
     public void setMember(Member newMember){
         this.member = newMember;
-        newMember.setProfile(this);
+        newMember.assignProfile(this);
     }
 
 
