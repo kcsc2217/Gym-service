@@ -3,6 +3,7 @@ package gymproject.gymProject.entity;
 
 import gymproject.gymProject.entity.Enum.Gender;
 import gymproject.gymProject.entity.Enum.Role;
+import gymproject.gymProject.entity.address.Address;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -23,22 +24,27 @@ public class Member extends BaseEntity{
 
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Embedded
+    private Address address;
+
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+
+    @OneToOne(mappedBy = "member")
     private Profile profile;
 
 
+    public Member(String username, String password, String email, String phoneNumber, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
 
-
-
-
-
-
-
+    public void assignProfile(Profile profile){
+        this.profile =profile;
+    }
 }
