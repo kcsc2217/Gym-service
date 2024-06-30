@@ -36,6 +36,12 @@ public class Review extends BaseEntity{
         setGym(gym);
     }
 
+    public Review(String content, int rating, Member member) {
+        this.content = content;
+        this.rating = rating;
+        this.member = member;
+    }
+
     public void setMember(Member member){
         this.member = member;
         member.getRivewlist().add(this);

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,6 +22,7 @@ public class Member extends BaseEntity{
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
+
 
     private String username;
 
@@ -47,10 +49,14 @@ public class Member extends BaseEntity{
     @OneToMany(mappedBy = "member")
     private List<UserGym> userGymList = new ArrayList<>();
 
-    public Member(String username, String password, String email, String phoneNumber, Role role) {
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    private List<Likes> likes = new ArrayList<>();
+
+    public Member(String username, String password, String email, String phoneNumber, Role role, Address address) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.address =address;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }
