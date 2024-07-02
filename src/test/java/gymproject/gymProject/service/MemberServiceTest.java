@@ -5,6 +5,7 @@ import gymproject.gymProject.entity.Form.MemberForm;
 import gymproject.gymProject.entity.Likes;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.Review;
+import gymproject.gymProject.entity.exception.DuplicatePasswordException;
 import gymproject.gymProject.repogitory.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -77,6 +79,25 @@ class MemberServiceTest {
 
 
        //then
+    }
+
+    @Test
+    public void 회원가입유효성검사() throws Exception {
+       //given
+
+        MemberForm memberForm1 = makeForm();
+        MemberForm memberForm2 = makeForm();
+
+        Member member1 = memberService.alertMember(memberForm1);
+        Member member2 = memberService.alertMember(memberForm2);
+
+        //when
+        Long id = memberService.createMember(member1);
+
+
+       //then
+
+        Assertions.assertThatThrownBy(() -> memberService.createMember(member2)).isInstanceOf(DuplicatePasswordException.class);
     }
 
     private static MemberForm makeForm() {

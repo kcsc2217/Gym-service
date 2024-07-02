@@ -5,6 +5,7 @@ import gymproject.gymProject.entity.address.Address;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,7 +21,11 @@ public class MemberForm {
     @Size(min = 6, message = "Password should have at least 6 characters")
     private String password;
 
+    @NotEmpty(message = "name is required")
+    private String name;
+
     @NotEmpty(message = "Phone number is required")
+    @Email(message = "이메일 형식으로 입력해주세요.")
     private String email;
 
     @NotNull(message = "Address is required")
