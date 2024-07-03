@@ -360,6 +360,7 @@ color: #dc3545;
             } else if (result.result == "1") {
                 alert("이미 사용중인 아이디입니다.");
                 $("#username").focus();
+                 $('#username').val('').focus();
             } else {
                 alert("success이지만 result 값이 undefined 잘못됨");
             }
@@ -371,7 +372,20 @@ color: #dc3545;
     });
     }
 
+    function reUsername() {
+// 입력 필드 활성화
+$('#username').attr('readonly', false);
 
+// 입력 필드 초기화
+$('#username').val('');
+
+// 중복 확인 버튼 활성화 및 표시
+$('#usernameOverlay').attr('disabled', false);
+$('#usernameOverlay').css('display', 'inline-block');
+
+// 다시 입력 버튼 비활성화
+$('#resetUsername').prop('disabled', true);
+}
 </script>
 </body>
 </html>
