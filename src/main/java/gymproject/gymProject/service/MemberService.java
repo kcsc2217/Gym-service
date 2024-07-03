@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -42,6 +44,14 @@ public class MemberService{
     public void login(Member member){
 
 
+    }
+
+    // 중복회원 검사하기
+    public HashMap<String, Object> usernameOverlap(String username){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("result", memberRepository.existsByUsername(username));
+
+        return map;
     }
 
     private static void validationFindMember(Optional<Member> findByMember) {

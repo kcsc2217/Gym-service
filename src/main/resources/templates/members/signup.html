@@ -1,6 +1,9 @@
 <!doctype html>
-<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
-<head><script src="/docs/5.3/assets/js/color-modes.js"></script>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org"
+      xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> <!-- jQuery 로드 -->
+    <script src="/docs/5.3/assets/js/color-modes.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,6 +62,11 @@
             height: 100vh;
         }
 
+        .field-error {
+    border-color: #dc3545;
+color: #dc3545;
+}
+
         .bi {
             vertical-align: -.125em;
             fill: currentColor;
@@ -107,6 +115,11 @@
             display: block !important;
         }
 
+        .custom-input-width {
+        max-width: 800px;
+}
+
+
         .logo {
             font-size: 3rem;
             font-family: "Black Han Sans", sans-serif;
@@ -133,6 +146,10 @@
             border-color: #ffd700; /* Updated color */
             font-weight: bold;
         }
+        .offset-right {
+    margin-left: 15%;
+    margin-right: 0;
+}
     </style>
 
 
@@ -190,24 +207,64 @@
     </div>
 </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center offset-right">
             <div class="col-md-7 col-lg-8">
-                <h4 class="mb-3">Billing address</h4>
+                <h4 class="mb-3">회원가입</h4>
                 <form class="needs-validation" th:action th:object="${memberForm}" method="post" novalidate>
                     <div class="row g-3">
+
+                        <div th:if="${#fields.hasGlobalErrors()}">
+                            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                               th:text="${err}">글로벌 오류 메시지</p>
+                        </div>
+
+
+                        <div class="col-12">
+                            <label for="username" class="form-label">Id</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control custom-input-width" th:field="*{username}" id="username" placeholder="아이디를 입력하세요" required>
+                                <button class="btn btn-outline-secondary" type="button" id="usernameOverlay" onclick="usernameCheck()">중복확인</button>
+                                <button class="btn btn-outline-secondary"   type="button" id="resetUsername" onclick="reUsername()" disabled value="다시입력">다시 입력</button>
+                                <div class="field-error" th:errors="*{username}"></div>
+                                <div class="invalid-feedback">
+                                    Your username is required.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12">
+                            <label for="username" class="form-label">Password</label>
+                            <div class="input-group has-validation">
+                                <input type="password" class="form-control custom-input-width" th:field="*{password}"  placeholder="비밀번호를 입력하세요" required>
+                                <div class="field-error" th:errors="*{password}">
+                                    상품명 오류
+                                </div>
+                                <div class="invalid-feedback">
+                                    Your username is required.
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">이름</label>
-                            <input type="text" class="form-control" th:field="*{name}" id="firstName" placeholder="이름을 입력하세요" value="" required>
+                            <input type="text" class="form-control custom-input-width" th:field="*{name}" id="firstName"  placeholder="이름을 입력하세요" value="" required>
+                            <div class="field-error" th:errors="*{name}">
+                                상품명 오류
+                            </div>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="username" class="form-label">Id</label>
+                            <label for="username" class="form-label">PhoneNumber</label>
                             <div class="input-group has-validation">
-                                <span class="input-group-text">@</span>
-                                <input type="text" class="form-control" th:field="*{username}" id="username" placeholder="아이디를 입력하세요" required>
+                                <input type="tel" class="form-control custom-input-width" th:field="*{phoneNumber}"  placeholder="휴대폰번호를 입력하세요" required>
+                                <div class="field-error" th:errors="*{phoneNumber}">
+                                    상품명 오류
+                                </div>
                                 <div class="invalid-feedback">
                                     Your username is required.
                                 </div>
@@ -216,28 +273,40 @@
 
                         <div class="col-12">
                             <label for="email" class="form-label">Email <span class="text-body-secondary"></span></label>
-                            <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="you@example.com">
+                            <input type="email" class="form-control custom-input-width" th:field="*{email}" id="email" placeholder="you@example.com">
+                            <div class="field-error" th:errors="*{email}">
+                                상품명 오류
+                            </div>
                             <div class="invalid-feedback">
                                 Please enter a valid email address for shipping updates.
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" class="form-control" th:field="*{city}" id="address" placeholder="도시를 입력하세요." required>
+                            <label for="address" class="form-label">도시</label>
+                            <input type="text" class="form-control custom-input-width" th:field="*{city}" id="address" placeholder="도시를 입력하세요." required>
+                            <div class="field-error" th:errors="*{city}">
+                                상품명 오류
+                            </div>
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="address2" class="form-label">Address 2 <span class="text-body-secondary"></span></label>
-                            <input type="text" class="form-control" th:field="*{street}" id="address2" placeholder="도로명을 입력하세요">
+                            <label for="address2" class="form-label">도로명 <span class="text-body-secondary"></span></label>
+                            <input type="text" class="form-control custom-input-width" th:field="*{street}" id="address2" placeholder="도로명을 입력하세요">
+                            <div class="field-error" th:errors="*{street}">
+                                상품명 오류
+                            </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="address2" class="form-label">Address 3<span class="text-body-secondary"></span></label>
-                            <input type="text" class="form-control" th:field="*{zipcode}" placeholder="집 주소를 입력하세요">
+                            <label for="address2" class="form-label">집 주소<span class="text-body-secondary"></span></label>
+                            <input type="text" class="form-control custom-input-width" th:field="*{zipcode}" placeholder="집 주소를 입력하세요">
+                            <div class="field-error" th:errors="*{zipcode}">
+                                상품명 오류
+                            </div>
                         </div>
 
                         <div class="col-md-5">
@@ -246,6 +315,9 @@
                                 <option value="">==권한==</option>
                                 <option th:each="role : ${roles}" th:value="${role.name()}" th:text="${role.getDescription()}">Role</option>
                             </select>
+                            <div class="field-error" th:errors="*{role}">
+                                상품명 오류
+                            </div>
                         </div>
                     </div>
                     <hr class="my-4">
@@ -258,5 +330,48 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="checkout.js"></script>
+<script >
+    function usernameCheck() {
+        const username = $("#username").val();
+      if (username == "") {
+        alert("아이디를 입력해주세요!. 필수항목입니다.");
+        $("#username").focus();
+        return false;
+    }
+
+    $.ajax({
+        type: "get",
+        url: "/api/overlap/usernameRegister",
+        data: {"username": username},
+        dataType: "JSON",
+
+
+        success: function (result) {
+            if (result.result == "0") {
+                if (confirm("이 아이디는 사용 가능합니다. \n사용하시겠습니까?")) {
+                    usernameOverlapCheck = 1;
+                    $("#username").attr("readonly", true);
+                    $("#usernameOverlay").attr("disabled", true);
+                    $("#usernameOverlay").css("display", "none");
+                    $("#resetUsername").attr("disabled", false);
+                    $("#resetUsername").css("display", "inline-block");
+                }
+                return false;
+            } else if (result.result == "1") {
+                alert("이미 사용중인 아이디입니다.");
+                $("#username").focus();
+            } else {
+                alert("success이지만 result 값이 undefined 잘못됨");
+            }
+        },
+        error: function (request, status,error) {
+            alert("ajax 실행 실패");
+            alert("code:" + request.status + "\n" + "error :" + error);
+        }
+    });
+    }
+
+
+</script>
 </body>
 </html>
