@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class MemberForm {
 
-    @NotEmpty(message = "Username is required")
+    @NotEmpty(message = "이미 존재하는 회원입니다.")
     private String username;
 
     @NotEmpty(message = "Password is required")

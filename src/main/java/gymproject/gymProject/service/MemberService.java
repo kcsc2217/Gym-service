@@ -54,6 +54,16 @@ public class MemberService{
         return map;
     }
 
+    //중복 이메일 검사
+
+    public HashMap<String, Object> emailOverlap(String email){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("result", memberRepository.existsByEmail(email));
+
+        return map;
+    }
+
+
     private static void validationFindMember(Optional<Member> findByMember) {
         if(findByMember.isPresent()){
             throw new DuplicatePasswordException("Member already exists."); //회원 가입 검증 로직

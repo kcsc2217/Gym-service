@@ -2,6 +2,7 @@ package gymproject.gymProject.controller;
 
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.entity.Form.MemberForm;
+import gymproject.gymProject.entity.Form.MemberLoginForm;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.exception.DuplicatePasswordException;
 import gymproject.gymProject.service.MemberService;
@@ -56,6 +57,13 @@ public class MemberController {
         log.info("회원 가입 완료");
 
         return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model){
+        model.addAttribute("loginForm", new MemberLoginForm());
+
+        return "/members/login";
     }
 
 

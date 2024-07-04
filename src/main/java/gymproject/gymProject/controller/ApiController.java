@@ -19,8 +19,14 @@ public class ApiController {
     private final MemberService memberService;
     @GetMapping("/overlap/usernameRegister")
     public Map<String, Object> usernameRegister(@RequestParam String username){
-        log.info("컨트롤러 통과");
+        log.info("username 중복 컨트롤러 통과");
        return memberService.usernameOverlap(username);
+    }
+
+    @GetMapping("/overlap/emailRegister")
+    public Map<String, Object> emailRegister(@RequestParam String email){
+        log.info("email 중복 컨트롤러 통과");
+        return memberService.emailOverlap(email);
     }
 
 }

@@ -274,6 +274,8 @@ color: #dc3545;
                         <div class="col-12">
                             <label for="email" class="form-label">Email <span class="text-body-secondary"></span></label>
                             <input type="email" class="form-control custom-input-width" th:field="*{email}" id="email" placeholder="you@example.com">
+                            <button class="btn btn-outline-secondary" type="button" id="emailOverlay" onclick="emailCheck()">중복확인</button>
+                            <button class="btn btn-outline-secondary"   type="button" id="resetEmail" onclick="reEmail()" disabled value="다시입력">다시 입력</button>
                             <div class="field-error" th:errors="*{email}">
                                 상품명 오류
                             </div>
@@ -321,7 +323,7 @@ color: #dc3545;
                         </div>
                     </div>
                     <hr class="my-4">
-                    <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+                    <button class="w-100 btn btn-primary btn-lg"  id="submitButton" type="submit" disabled>Continue to checkout</button>
                 </form>
             </div>
         </div>
@@ -330,62 +332,122 @@ color: #dc3545;
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="checkout.js"></script>
-<script >
+<script>
+    let usernameOverlapCheck = 0;
+
     function usernameCheck() {
         const username = $("#username").val();
-      if (username == "") {
-        alert("아이디를 입력해주세요!. 필수항목입니다.");
-        $("#username").focus();
-        return false;
-    }
-
-    $.ajax({
-        type: "get",
-        url: "/api/overlap/usernameRegister",
-        data: {"username": username},
-        dataType: "JSON",
-
-
-        success: function (result) {
-            if (result.result == "0") {
-                if (confirm("이 아이디는 사용 가능합니다. \n사용하시겠습니까?")) {
-                    usernameOverlapCheck = 1;
-                    $("#username").attr("readonly", true);
-                    $("#usernameOverlay").attr("disabled", true);
-                    $("#usernameOverlay").css("display", "none");
-                    $("#resetUsername").attr("disabled", false);
-                    $("#resetUsername").css("display", "inline-block");
-                }
-                return false;
-            } else if (result.result == "1") {
-                alert("이미 사용중인 아이디입니다.");
-                $("#username").focus();
-                 $('#username').val('').focus();
-            } else {
-                alert("success이지만 result 값이 undefined 잘못됨");
-            }
-        },
-        error: function (request, status,error) {
-            alert("ajax 실행 실패");
-            alert("code:" + request.status + "\n" + "error :" + error);
+        if (username == "") {
+            alert("아이디를 입력해주세요!. 필수항목입니다.");
+            $("#username").focus();
+            return false;
         }
-    });
+
+        $.ajax({
+            type: "get",
+            url: "/api/overlap/usernameRegister",
+            data: { "username": username },
+            dataType: "JSON",
+            success: function (result) {
+                if (result.result == "0") {
+                    if (confirm("이 아이디는 사용 가능합니다. \n사용하시겠습니까?")) {
+                        usernameOverlapCheck = 1;
+                        $("#username").attr("readonly", true);
+                        $("#usernameOverlay").attr("disabled", true);
+                        $("#usernameOverlay").css("display", "none");
+                        $("#resetUsername").attr("disabled", false);
+                        $("#resetUsername").css("display", "inline-block");
+                        // Enable the submit button
+
+                    }
+                    return false;
+                } else if (result.result == "1") {
+                    alert("이미 사용중인 아이디입니다.");
+                    $("#username").focus();
+                    $('#username').val('').focus();
+                } else {
+                    alert("success이지만 result 값이 undefined 잘못됨");
+                }
+            },
+            error: function (request, status, error) {
+                alert("ajax 실행 실패");
+                alert("code:" + request.status + "\n" + "error :" + error);
+            }
+        });
     }
 
     function reUsername() {
-// 입력 필드 활성화
-$('#username').attr('readonly', false);
+        // 입력 필드 활성화
+        $('#username').attr('readonly', false);
+        // 입력 필드 초기화
+        $('#username').val('');
+        // 중복 확인 버튼 활성화 및 표시
+        $('#usernameOverlay').attr('disabled', false);
+        $('#usernameOverlay').css('display', 'inline-block');
+        // 다시 입력 버튼 비활성화
+        $('#resetUsername').prop('disabled', true);
+        // Disable the submit button
 
-// 입력 필드 초기화
-$('#username').val('');
+    }
+</script>
 
-// 중복 확인 버튼 활성화 및 표시
-$('#usernameOverlay').attr('disabled', false);
-$('#usernameOverlay').css('display', 'inline-block');
+<script>
+    let emailOverlapCheck = 0;
 
-// 다시 입력 버튼 비활성화
-$('#resetUsername').prop('disabled', true);
-}
+    function emailCheck() {
+        const email = $("#email").val();
+        if (email == "") {
+            alert("이메일은 필수항목입니다!");
+            $("#email").focus();
+            return false;
+        }
+
+        $.ajax({
+            type: "get",
+            url: "/api/overlap/emailRegister",
+            data: { "email": email },
+            dataType: "JSON",
+            success: function (result) {
+                if (result.result == "0") {
+                    if (confirm("이 이메일은 사용 가능합니다. \n사용하시겠습니까?")) {
+                        emailOverlapCheck = 1;
+                        $("#email").attr("readonly", true);
+                        $("#emailOverlay").attr("disabled", true);
+                        $("#emailOverlay").css("display", "none");
+                        $("#resetEmail").attr("disabled", false);
+                        $("#resetEmail").css("display", "inline-block");
+                        // 회원가입 버튼 활성화
+                        $("#submitButton").attr("disabled", false);
+                    }
+                    return false;
+                } else if (result.result == "1") {
+                    alert("이미 사용중인 이메일입니다.");
+                    $("#email").focus();
+                    $('#email').val('').focus();
+                } else {
+                    alert("성공했지만 결과 값이 잘못되었습니다.");
+                }
+            },
+            error: function (request, status, error) {
+                alert("AJAX 실행 실패");
+                alert("code:" + request.status + "\n" + "error :" + error);
+            }
+        });
+    }
+
+    function reEmail() {
+        // 입력 필드 활성화
+        $('#email').attr('readonly', false);
+        // 입력 필드 초기화
+        $('#email').val('');
+        // 중복 확인 버튼 활성화 및 표시
+        $('#emailOverlay').attr('disabled', false);
+        $('#emailOverlay').css('display', 'inline-block');
+        // 다시 입력 버튼 비활성화
+        $('#resetEmail').prop('disabled', true);
+        // 회원가입 버튼 비활성화
+        $("#submitButton").attr("disabled", true);
+    }
 </script>
 </body>
 </html>
