@@ -1,5 +1,6 @@
 package gymproject.gymProject.service;
 
+import gymproject.gymProject.entity.CustomUserDetails;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.repogitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-       return memberRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException((username)));
+       Member member = memberRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException((username)));
+
+       return new CustomUserDetails(member);
 
     }
 

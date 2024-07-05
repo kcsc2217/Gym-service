@@ -9,6 +9,8 @@ public class MemberLoginForm {
 
     private String password;
 
+    private boolean remember;
+
     public MemberLoginForm(String username, String password) {
         this.username = username;
         this.password = password;

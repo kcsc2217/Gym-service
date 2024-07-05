@@ -17,7 +17,7 @@ import java.util.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity implements UserDetails {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -43,7 +43,7 @@ public class Member extends BaseEntity implements UserDetails {
     private Role role;
 
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Profile profile;
 
     @OneToMany(mappedBy = "member")
@@ -74,29 +74,5 @@ public class Member extends BaseEntity implements UserDetails {
         this.profile =profile;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;  // 계정이 만료되지 않았음을 나타냅니다.
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;  // 계정이 잠기지 않았음을 나타냅니다.
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;  // 자격 증명이 만료되지 않았음을 나타냅니다.
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;  // 계정이 활성화되었음을 나타냅니다.
-    }
 
 }

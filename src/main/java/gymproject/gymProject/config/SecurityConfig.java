@@ -1,5 +1,6 @@
 package gymproject.gymProject.config;
 
+import gymproject.gymProject.Handler.CustomAuthenticationFailureHandler;
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
@@ -23,6 +25,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Bean
     public WebSecurityCustomizer configure(){
@@ -40,7 +43,8 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login") // 로그인 페이지 경로
-                        .defaultSuccessUrl("/articles", true) // 로그인 성공 후 이동할 경로
+                        .defaultSuccessUrl("/articles", true) // 로그인 성공 후 이동할 경로4
+                        .failureHandler(customAuthenticationFailureHandler)
                         .permitAll() // 로그인 페이지 접근 허용
                 )
                 .logout(logout -> logout
@@ -49,7 +53,13 @@ public class SecurityConfig {
                         .invalidateHttpSession(true) // 세션 무효화
                         .permitAll() // 로그아웃 요청 접근 허용
                 )
-                .csrf(csrf -> csrf.disable()); // CSRF 보호 비활성화
+                .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
+                .rememberMe(rememberMe -> rememberMe
+                        .rememberMeParameter("remember") // default 파라미터는 remember-me
+                        .tokenValiditySeconds(604800) // 7일(default 14일)
+                        .alwaysRemember(false) // remember-me 기능 항상 실행
+                        .userDetailsService(customUserDetailsService) // 사용자 계정 조회
+                );
 
         return http.build();
     }
