@@ -66,6 +66,26 @@
     border-color: #dc3545;
 color: #dc3545;
 }
+  #verificationModal {
+            display: none; /* 초기에는 숨김 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+         #verificationModalContent {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
 
         .bi {
             vertical-align: -.125em;
@@ -276,8 +296,17 @@ color: #dc3545;
                             <input type="email" class="form-control custom-input-width" th:field="*{email}" id="email" placeholder="you@example.com">
                             <button class="btn btn-outline-secondary" type="button" id="emailOverlay" onclick="emailCheck()">중복확인</button>
                             <button class="btn btn-outline-secondary"   type="button" id="resetEmail" onclick="reEmail()" disabled value="다시입력">다시 입력</button>
+                            <button class="btn btn-outline-secondary" type="button" id ="sendEmail" onclick="sendEmails()" disabled>이메일 인증</button>
                             <div class="field-error" th:errors="*{email}">
                                 상품명 오류
+                            </div>
+
+                            <div id="verificationModal">
+                                <div id="verificationModalContent">
+                                    <span>인증 코드를 입력하세요:</span>
+                                    <input type="text" id="verificationCode" placeholder="인증 코드">
+                                    <button type="button" onclick="verifyCode()">확인</button>
+                                </div>
                             </div>
                             <div class="invalid-feedback">
                                 Please enter a valid email address for shipping updates.
@@ -416,8 +445,8 @@ color: #dc3545;
                         $("#emailOverlay").css("display", "none");
                         $("#resetEmail").attr("disabled", false);
                         $("#resetEmail").css("display", "inline-block");
-                        // 회원가입 버튼 활성화
-                        $("#submitButton").attr("disabled", false);
+                        $("#resetEmail").attr("disabled", false);
+                        $("#sendEmail").attr("disabled", false);
                     }
                     return false;
                 } else if (result.result == "1") {
@@ -445,9 +474,59 @@ color: #dc3545;
         $('#emailOverlay').css('display', 'inline-block');
         // 다시 입력 버튼 비활성화
         $('#resetEmail').prop('disabled', true);
+        // 이메일 버튼 비활성화
+        $('#sendEmail').prop('disabled', true);
         // 회원가입 버튼 비활성화
         $("#submitButton").attr("disabled", true);
     }
+
+     function sendEmails() {
+            var email = $('#email').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/mailSend',
+                data: { mail: email },
+                success: function(response) {
+                    if (response.success) {
+                        alert('이메일 전송 완료!!');
+                          showVerificationPopup(); // 팝업 창 띄우기
+                    } else {
+                        alert('이메일 전송 실패 ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        }
+
+    function showVerificationPopup() {
+            $('#verificationModal').show();
+        }
+
+        function verifyCode() {
+
+            var verificationCode = $('#verificationCode').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/verifyCode',
+                data: { code: verificationCode },
+                success: function(response) {
+                    if (response.success) {
+                        alert('인증 성공!');
+                        $('#verificationModal').hide();
+                    $("#submitButton").attr("disabled", false);
+                    } else {
+                        alert('인증 실패: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        }
 </script>
 </body>
 </html>
