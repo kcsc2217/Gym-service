@@ -38,12 +38,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup", "/", "/api/**", "/mailSend/**","/verifyCode").permitAll() // 인증 없이 접근 허용할 경로
+                        .requestMatchers("/login", "/signup", "/", "/api/**", "/mailSend/**","/verifyCode", "/profiles/**").permitAll() // 인증 없이 접근 허용할 경로
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 .formLogin(form -> form
                         .loginPage("/login") // 로그인 페이지 경로
-                        .defaultSuccessUrl("/articles", true) // 로그인 성공 후 이동할 경로4
+                        .defaultSuccessUrl("/", true) // 로그인 성공 후 이동할 경로4
                         .failureHandler(customAuthenticationFailureHandler)
                         .permitAll() // 로그인 페이지 접근 허용
                 )

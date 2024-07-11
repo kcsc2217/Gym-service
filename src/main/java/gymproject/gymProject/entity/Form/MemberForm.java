@@ -14,29 +14,29 @@ import lombok.Data;
 @Data
 public class MemberForm {
 
-    @NotEmpty(message = "이미 존재하는 회원입니다.")
+    @NotEmpty(message = "아이디를 입력해주세요.")
     private String username;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 6, message = "Password should have at least 6 characters")
+    @NotEmpty(message = "비밀번호를 입력해주세요.")
+    @Size(min = 6, message = "패스워드는 최소 6글자 입니다")
     private String password;
 
-    @NotEmpty(message = "name is required")
+    @NotEmpty(message = "이름을 입력해주세요.")
     private String name;
 
-    @NotEmpty(message = "Phone number is required")
+    @NotEmpty(message = "이메일을 입력해주세요.")
     @Email(message = "이메일 형식으로 입력해주세요.")
     private String email;
 
-    @NotNull(message = "phoneNumber is required")
+    @NotNull(message = "휴대폰 번호를 입력해주세요.")
     private String phoneNumber;
 
-    @NotEmpty(message = "City is required")
+    @NotEmpty(message = "도시를 입력해주세요.")
     private String city;
 
-    @NotEmpty(message = "Street is required")
+    @NotEmpty(message = "도로명을 입력해주세요.")
     private String street;
-    @NotEmpty(message = "Zipcode is required")
+    @NotEmpty(message = "집주소를 입력해주세요.")
     private String zipcode;
 
     @NotNull(message = "Role is required")
@@ -45,9 +45,10 @@ public class MemberForm {
     public MemberForm() {
     }
 
-    public MemberForm(String username, String password, String email, String phoneNumber, String city, String street, String zipcode, Role role) {
+    public MemberForm(String username, String password, String name, String email, String phoneNumber, String city, String street, String zipcode, Role role) {
         this.username = username;
         this.password = password;
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.city = city;

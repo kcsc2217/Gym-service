@@ -3,6 +3,8 @@ package gymproject.gymProject.entity;
 
 import gymproject.gymProject.entity.Enum.Gender;
 import gymproject.gymProject.entity.Enum.Role;
+import gymproject.gymProject.entity.Form.MemberForm;
+import gymproject.gymProject.entity.Form.MemberModifyForm;
 import gymproject.gymProject.entity.address.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -43,7 +45,8 @@ public class Member extends BaseEntity {
     private Role role;
 
 
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "profile_id")
     private Profile profile;
 
     @OneToMany(mappedBy = "member")
@@ -52,8 +55,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<UserGym> userGymList = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    private List<Likes> likes = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Likes> likes = new ArrayList<>();
 
     public Member(String username, String password, String email, String phoneNumber, Role role, String name,Address address) {
         this.username = username;
@@ -67,6 +70,21 @@ public class Member extends BaseEntity {
 
     public void setPassword(String password){
         this.password = password;
+    }
+
+
+    public void setMember(MemberModifyForm memberModifyForm){
+        Address newAddress = new Address(memberModifyForm.getCity(), memberModifyForm.getStreet(), memberModifyForm.getZipcode());
+
+        this.name = memberModifyForm.getName();
+        this.phoneNumber = memberModifyForm.getPhoneNumber();
+        this.address = newAddress;
+
+    }
+
+    public void setProfile(Profile profile){
+        this.profile =profile;
+        profile.setMember(this);
     }
 
 

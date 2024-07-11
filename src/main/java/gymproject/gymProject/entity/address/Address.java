@@ -2,9 +2,11 @@ package gymproject.gymProject.entity.address;
 
 
 import jakarta.persistence.Embeddable;
+import lombok.Data;
 
 
 @Embeddable
+@Data
 public class Address {
 
     private String city;

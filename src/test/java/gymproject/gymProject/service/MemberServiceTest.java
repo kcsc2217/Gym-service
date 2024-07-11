@@ -2,11 +2,13 @@ package gymproject.gymProject.service;
 
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.entity.Form.MemberForm;
+import gymproject.gymProject.entity.Form.MemberModifyForm;
 import gymproject.gymProject.entity.Likes;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.Review;
 import gymproject.gymProject.entity.exception.DuplicatePasswordException;
 import gymproject.gymProject.repogitory.MemberRepository;
+import jakarta.persistence.AssociationOverride;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,9 @@ class MemberServiceTest {
 
         //when
         Long id = memberService.createMember(member);
+
+        entityManager.flush();
+        entityManager.clear();
 
 
         Optional<Member> findMember = memberRepository.findById(id);
@@ -100,8 +105,39 @@ class MemberServiceTest {
         Assertions.assertThatThrownBy(() -> memberService.createMember(member2)).isInstanceOf(DuplicatePasswordException.class);
     }
 
+    @Test
+    public void 수정하기() throws Exception {
+       //given
+
+        MemberForm memberForm1 = makeForm();
+
+        Member member1 = memberService.alertMember(memberForm1);
+
+        //when
+        Long id = memberService.createMember(member1);
+
+        entityManager.flush();
+        entityManager.clear();
+
+       //when
+
+        MemberModifyForm memberModifyForm = new MemberModifyForm("리중딱","010-1561-1611", "전주시", "배학2길", "303호" );
+
+        memberService.modify(id, memberModifyForm);
+        entityManager.flush();
+        entityManager.clear();
+
+        Member findMember = memberService.findMemberById(id);
+
+
+
+
+        //then
+        Assertions.assertThat(findMember.getName()).isEqualTo("리중딱");
+    }
+
     private static MemberForm makeForm() {
-        MemberForm memberForm = new MemberForm("성원", "123", "k12002@nate.com", "010-7119-8112", "광양", "광장로", "84", Role.user);
+        MemberForm memberForm = new MemberForm("성원", "12345","이성원", "k1200@nate.com", "010-7119-8112", "광양", "광장로", "84", Role.user);
         return memberForm;
     }
 

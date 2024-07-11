@@ -21,6 +21,10 @@ public class testInit implements CommandLineRunner {
         Member member = new Member("kcsc2217", "k12002","k12002@nate.com", "010-7119-8112", Role.user, "이성원", new Address("광양시", "광장로",
                 "305동 1501호"));
 
+        log.info("테스트 데이터");
+
+        System.out.println("테스트 데이터");
+
             memberService.createMember(member);
 
     }

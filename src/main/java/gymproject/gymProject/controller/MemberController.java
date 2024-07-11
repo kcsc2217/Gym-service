@@ -1,20 +1,24 @@
 package gymproject.gymProject.controller;
 
+import gymproject.gymProject.entity.CustomUserDetails;
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.entity.Form.MemberForm;
 import gymproject.gymProject.entity.Form.MemberLoginForm;
+import gymproject.gymProject.entity.Form.MemberModifyForm;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.exception.DuplicatePasswordException;
 import gymproject.gymProject.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +37,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String createdMember(@Valid @ModelAttribute MemberForm memberForm, BindingResult bindingResult, Model model){
+    public String createdMember(@Valid @ModelAttribute MemberForm memberForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 
         model.addAttribute("roles", Role.values());
 
@@ -56,7 +60,9 @@ public class MemberController {
 
         log.info("회원 가입 완료");
 
-        return "redirect:/login";
+         redirectAttributes.addAttribute("memberId", member.getId());
+
+        return "redirect:/profiles/new/{memberId}";
     }
 
     @GetMapping("/login")
@@ -64,6 +70,36 @@ public class MemberController {
         model.addAttribute("loginForm", new MemberLoginForm());
 
         return "/members/login";
+    }
+
+    @GetMapping("/update")
+    public String updateForm(@AuthenticationPrincipal CustomUserDetails customUserDetails,Model model){
+        if(customUserDetails == null){
+            return "redirect:/login";
+        }
+        else{
+            Member member = customUserDetails.getMember();
+
+
+            model.addAttribute("memberUpdateForm", new MemberModifyForm(member));
+        }
+
+        return "members/update";
+
+    }
+
+    @PostMapping("/update")
+    public String update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @Valid @ModelAttribute MemberModifyForm memberModifyForm){
+        if(customUserDetails == null){
+            return "redirect:/login";
+        }else{
+            Member member = customUserDetails.getMember();
+
+            memberService.modify(member.getId(), memberModifyForm);
+        }
+
+        return "redirect:/";
+
     }
 
 

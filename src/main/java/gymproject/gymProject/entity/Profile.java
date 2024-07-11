@@ -1,7 +1,9 @@
 package gymproject.gymProject.entity;
 
 
+import gymproject.gymProject.File.UploadFile;
 import gymproject.gymProject.entity.Enum.ExerciseIntensity;
+import gymproject.gymProject.entity.Form.ProfileForm;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,21 +26,30 @@ public class Profile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ExerciseIntensity exerciseIntensity;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_id")
+    private UploadFile uploadFile; // 프로필 저장 시 파일경로 저장
+
+    @OneToOne(mappedBy = "profile")
     private Member member;
 
-    public Profile(int age, String exercise_goal, ExerciseIntensity exerciseIntensity, Member member) {
+    public Profile(int age, String exercise_goal, ExerciseIntensity exerciseIntensity) {
         this.age = age;
         this.exercise_goal = exercise_goal;
         this.exerciseIntensity = exerciseIntensity;
-        setMember(member);
     }
 
-    public void setMember(Member newMember){
-        this.member = newMember;
-        newMember.assignProfile(this);
+    public Profile(ProfileForm profileForm, UploadFile uploadFile){
+        this.age = profileForm.getAge();
+        this.exercise_goal = profileForm.getExercise_goal();
+        this.exerciseIntensity = profileForm.getExerciseIntensity();
+        this.uploadFile = uploadFile;
     }
+
+
+    public  void setMember(Member member){
+        this.member = member;
+    }
+
+
 
 
 
