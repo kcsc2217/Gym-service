@@ -15,6 +15,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailAndUsername(@Param("email") String email, @Param("username") String username);
 
 
+        @Query("select m from Member m JOIN FETCH m.profile  Where m.id = :id")
+        Optional<Member> findByIdWithProfile(@Param("id") Long id);
+
+
     Optional<Member> findByUsername(String username); //아이디 중복확인
 
     boolean existsByEmail(String email); //이메일 중복확인

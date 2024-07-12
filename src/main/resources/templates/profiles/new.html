@@ -14,6 +14,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap');
 
+        body {
+            background-color: #f8f9fa;
+        }
+
         .field-error {
             border-color: #dc3545;
             color: #dc3545;
@@ -59,6 +63,7 @@
             height: 150px;
             object-fit: cover;
             margin-bottom: 20px;
+            border-radius: 50%;
         }
 
         .upload-button {
@@ -80,10 +85,24 @@
             color: #aaa;
             margin: 0 auto;
             cursor: pointer;
+            border-radius: 50%;
         }
 
         .placeholder-image:hover {
             background-color: #e0e0e0;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .invalid-feedback {
+            font-size: 0.875em;
+        }
+
+        .profile-container h2 {
+            margin-bottom: 20px;
+            font-family: "Noto Sans KR", sans-serif;
         }
     </style>
 </head>
@@ -109,13 +128,13 @@
                 </div>
 
                 <div class="container profile-container">
-                    <h2 class="mb-3">프로필 로고 이미지</h2>
+                    <h2 class="mb-3">프로필 이미지</h2>
                     <div class="placeholder-image" id="placeholderImage" onclick="document.getElementById('profileImageInput').click()">
                         <span>이미지 선택</span>
                     </div>
                     <img src="/images/default-image.png" class="img-thumbnail profile-image d-none" alt="Profile Image" id="profileImage">
                     <input type="file" id="profileImageInput" th:field="*{multipartFile}" class="hidden-input" accept="image/*">
-                    <button class="btn btn-primary upload-button" type="button" onclick="document.getElementById('profileImageInput').click()">로고 이미지 등록</button>
+                    <button class="btn btn-primary upload-button" type="button" onclick="document.getElementById('profileImageInput').click()">이미지 등록</button>
                 </div>
 
                 <div class="col-12">
@@ -124,6 +143,35 @@
                     <div class="field-error" th:errors="*{age}"></div>
                     <div class="invalid-feedback">
                         유효한 나이를 입력하세요.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="height" class="form-label">키</label>
+                    <input type="text" class="form-control custom-input-width" th:field="*{height}" id="height" placeholder="키를 입력하세요 (예: 170cm)" pattern="\d+cm" required>
+                    <div class="field-error" th:errors="*{height}"></div>
+                    <div class="invalid-feedback">
+                        유효한 키를 "숫자cm" 형식으로 입력하세요 (예: 170cm).
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="weight" class="form-label">몸무게</label>
+                    <input type="text" class="form-control custom-input-width" th:field="*{weight}" id="weight" placeholder="몸무게를 입력하세요" required>
+                    <div class="field-error" th:errors="*{weight}"></div>
+                    <div class="invalid-feedback">
+                        유효한 몸무게를 입력하세요.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="gender" class="form-label">성별</label>
+                    <select class="form-select custom-input-width" th:field="*{gender}" required>
+                        <option th:each="gender : ${genders}" th:value="${gender.name()}" th:text="${gender.getDescription()}">성별</option>
+                    </select>
+                    <div class="field-error" th:errors="*{gender}"></div>
+                    <div class="invalid-feedback">
+                        유효한 성별을 선택하세요.
                     </div>
                 </div>
 
@@ -139,11 +187,22 @@
                 <div class="col-12">
                     <label for="exerciseIntensity" class="form-label">운동 강도</label>
                     <select class="form-select custom-input-width" th:field="*{exerciseIntensity}" id="exerciseIntensity" required>
-                        <option th:each="intensity : ${intensity}" th:value="${intensity.name()}" th:text="${intensity.getDescription()}">intensity</option>
+                        <option th:each="intensity : ${intensity}" th:value="${intensity.name()}" th:text="${intensity.getDescription()}">운동 강도</option>
                     </select>
                     <div class="field-error" th:errors="*{exerciseIntensity}"></div>
                     <div class="invalid-feedback">
                         유효한 강도를 선택하세요.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="exerciseExperience" class="form-label">운동 경험</label>
+                    <select class="form-select custom-input-width" th:field="*{exerciseExperience}" id="exerciseExperience" required>
+                        <option th:each="exerciseExperience : ${exerciseExperiences}" th:value="${exerciseExperience.name()}" th:text="${exerciseExperience.getDescription()}">운동 경험</option>
+                    </select>
+                    <div class="field-error" th:errors="*{exerciseExperience}"></div>
+                    <div class="invalid-feedback">
+                        유효한 운동 경험을 선택하세요.
                     </div>
                 </div>
             </div>

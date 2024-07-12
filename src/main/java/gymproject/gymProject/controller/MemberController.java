@@ -1,10 +1,11 @@
 package gymproject.gymProject.controller;
 
 import gymproject.gymProject.entity.CustomUserDetails;
+import gymproject.gymProject.entity.Dto.Form.MemberDeleteForm;
 import gymproject.gymProject.entity.Enum.Role;
-import gymproject.gymProject.entity.Form.MemberForm;
-import gymproject.gymProject.entity.Form.MemberLoginForm;
-import gymproject.gymProject.entity.Form.MemberModifyForm;
+import gymproject.gymProject.entity.Dto.Form.MemberForm;
+import gymproject.gymProject.entity.Dto.Form.MemberLoginForm;
+import gymproject.gymProject.entity.Dto.Form.MemberModifyForm;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.exception.DuplicatePasswordException;
 import gymproject.gymProject.service.MemberService;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -73,15 +75,15 @@ public class MemberController {
     }
 
     @GetMapping("/update")
-    public String updateForm(@AuthenticationPrincipal CustomUserDetails customUserDetails,Model model){
+    public String updateForm(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model){
+
         if(customUserDetails == null){
             return "redirect:/login";
-        }
-        else{
-            Member member = customUserDetails.getMember();
+        }else{
+            Member findMember = customUserDetails.getMember();
 
+            model.addAttribute("memberUpdateForm", new MemberModifyForm(findMember));
 
-            model.addAttribute("memberUpdateForm", new MemberModifyForm(member));
         }
 
         return "members/update";
@@ -101,6 +103,29 @@ public class MemberController {
         return "redirect:/";
 
     }
+
+    @GetMapping("/delete")
+    public String deleteForm(@ModelAttribute MemberDeleteForm memberDeleteForm){
+        return "members/delete";
+    }
+
+    @PostMapping("/delete")
+    public String delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @Valid @ModelAttribute MemberDeleteForm memberDeleteForm){
+
+        if(customUserDetails == null){
+            return "redirect:/login";
+        }else{
+            log.info("회원 존재");
+            Member member = customUserDetails.getMember();
+            memberService.deleteMember(member.getId());
+        }
+
+        return "redirect:/login";
+    }
+
+
+
+
 
 
 }

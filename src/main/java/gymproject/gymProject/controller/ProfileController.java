@@ -1,10 +1,11 @@
 package gymproject.gymProject.controller;
 
+import gymproject.gymProject.entity.Enum.ExerciseExperience;
 import gymproject.gymProject.entity.Enum.ExerciseIntensity;
-import gymproject.gymProject.entity.Form.ProfileForm;
+import gymproject.gymProject.entity.Enum.Gender;
+import gymproject.gymProject.entity.Dto.Form.ProfileForm;
 import gymproject.gymProject.entity.exception.MemberNotFoundException;
 import gymproject.gymProject.service.MemberService;
-import gymproject.gymProject.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,18 +25,21 @@ public class ProfileController {
 
     private final MemberService memberService;
 
+    //프로필 등록 폼
     @GetMapping("/new/{id}")
     public String createForm(@PathVariable Long id,  @ModelAttribute ProfileForm profileForm, Model model){
-            model.addAttribute("id", id);
-            model.addAttribute("intensity", ExerciseIntensity.values());
-            return "/profiles/new";
+        extracted(id, model);
+        return "/profiles/new";
     }
 
+
     @PostMapping("/new/{id}")
-    public String create(@PathVariable Long id, @Valid @ModelAttribute ProfileForm profileForm, BindingResult bindingResult) throws IOException {
+    public String create(@PathVariable Long id, @Valid @ModelAttribute ProfileForm profileForm, BindingResult bindingResult
+    ,Model model) throws IOException {
 
         if(bindingResult.hasErrors()){
             log.info("바인딩 에러 발생");
+            extracted(id,model);
             return "/profiles/new";
         }
         log.info("바인딩 성공");
@@ -48,9 +52,16 @@ public class ProfileController {
             bindingResult.reject(e.getMessage());
         }
 
-        return "redirect:/";
+        return "redirect:/login";
 
 
+    }
+
+    private static void extracted(Long id, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("intensity", ExerciseIntensity.values());
+        model.addAttribute("genders", Gender.values());
+        model.addAttribute("exerciseExperiences", ExerciseExperience.values());
     }
 
 

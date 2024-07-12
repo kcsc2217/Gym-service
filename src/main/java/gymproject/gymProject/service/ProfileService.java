@@ -1,7 +1,7 @@
 package gymproject.gymProject.service;
 
 import gymproject.gymProject.File.UploadFile;
-import gymproject.gymProject.entity.Form.ProfileForm;
+import gymproject.gymProject.entity.Dto.Form.ProfileForm;
 import gymproject.gymProject.entity.Profile;
 import gymproject.gymProject.repogitory.ProfileRepository;
 import lombok.RequiredArgsConstructor;

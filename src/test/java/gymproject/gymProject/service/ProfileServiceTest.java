@@ -1,7 +1,7 @@
 package gymproject.gymProject.service;
 
 import gymproject.gymProject.entity.Enum.ExerciseIntensity;
-import gymproject.gymProject.entity.Form.ProfileForm;
+import gymproject.gymProject.entity.Dto.Form.ProfileForm;
 import gymproject.gymProject.entity.Profile;
 import gymproject.gymProject.repogitory.ProfileRepository;
 import jakarta.persistence.EntityManager;
@@ -12,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest

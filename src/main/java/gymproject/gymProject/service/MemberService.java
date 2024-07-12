@@ -2,9 +2,9 @@ package gymproject.gymProject.service;
 
 import gymproject.gymProject.File.FileStore;
 import gymproject.gymProject.File.UploadFile;
-import gymproject.gymProject.entity.Form.MemberForm;
-import gymproject.gymProject.entity.Form.MemberModifyForm;
-import gymproject.gymProject.entity.Form.ProfileForm;
+import gymproject.gymProject.entity.Dto.Form.MemberForm;
+import gymproject.gymProject.entity.Dto.Form.MemberModifyForm;
+import gymproject.gymProject.entity.Dto.Form.ProfileForm;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.Profile;
 import gymproject.gymProject.entity.address.Address;
@@ -13,16 +13,12 @@ import gymproject.gymProject.entity.exception.MemberNotFoundException;
 import gymproject.gymProject.repogitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -79,6 +75,13 @@ public class MemberService{
 
     }
 
+    @Transactional
+    public void deleteMember(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException("해당 멤버가 없습니다."));
+
+        memberRepository.delete(member);
+    }
+
 
     public Member findMemberById(Long id){
         Optional<Member> findMember = memberRepository.findById(id);
@@ -102,6 +105,10 @@ public class MemberService{
         map.put("result", memberRepository.existsByEmail(email));
 
         return map;
+    }
+
+    public boolean existByEmail(String email){
+      return memberRepository.existsByEmail(email);
     }
 
 

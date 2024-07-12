@@ -2,8 +2,10 @@ package gymproject.gymProject.entity;
 
 
 import gymproject.gymProject.File.UploadFile;
+import gymproject.gymProject.entity.Enum.ExerciseExperience;
 import gymproject.gymProject.entity.Enum.ExerciseIntensity;
-import gymproject.gymProject.entity.Form.ProfileForm;
+import gymproject.gymProject.entity.Enum.Gender;
+import gymproject.gymProject.entity.Dto.Form.ProfileForm;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,10 +23,25 @@ public class Profile extends BaseEntity {
 
     private int age;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    // 운동목표
     private String exercise_goal;
 
+    // 운동 경험
+    @Enumerated(EnumType.STRING)
+    private ExerciseExperience exerciseExperience;
+
+    // 운동 강도
     @Enumerated(EnumType.STRING)
     private ExerciseIntensity exerciseIntensity;
+
+    private String weight; // 몸무게
+
+    private String height; // 키
+
+
 
     private UploadFile uploadFile; // 프로필 저장 시 파일경로 저장
 
@@ -39,6 +56,10 @@ public class Profile extends BaseEntity {
 
     public Profile(ProfileForm profileForm, UploadFile uploadFile){
         this.age = profileForm.getAge();
+        this.exerciseExperience = profileForm.getExerciseExperience();
+        this.gender = profileForm.getGender();
+        this.weight = profileForm.getWeight();
+        this.height = profileForm.getHeight();
         this.exercise_goal = profileForm.getExercise_goal();
         this.exerciseIntensity = profileForm.getExerciseIntensity();
         this.uploadFile = uploadFile;

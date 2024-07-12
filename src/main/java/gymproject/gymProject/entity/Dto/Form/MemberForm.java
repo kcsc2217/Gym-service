@@ -1,4 +1,4 @@
-package gymproject.gymProject.entity.Form;
+package gymproject.gymProject.entity.Dto.Form;
 
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.entity.address.Address;

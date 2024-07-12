@@ -1,18 +1,13 @@
 package gymproject.gymProject.entity;
 
 
-import gymproject.gymProject.entity.Enum.Gender;
 import gymproject.gymProject.entity.Enum.Role;
-import gymproject.gymProject.entity.Form.MemberForm;
-import gymproject.gymProject.entity.Form.MemberModifyForm;
+import gymproject.gymProject.entity.Dto.Form.MemberModifyForm;
 import gymproject.gymProject.entity.address.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 

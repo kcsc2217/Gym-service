@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org"
+      xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> <!-- jQuery 로드 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <title>Member Update</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-family: "Black Han Sans", sans-serif;
+            color: #ffd700;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .lead {
+            font-size: 1.5rem;
+            font-family: "Black Han Sans", sans-serif;
+            font-weight: 400;
+            color: #000000;
+        }
+
+        .btn-primary {
+            background-color: #ffd700;
+            border-color: #ffd700;
+            font-weight: bold;
+        }
+
+        .custom-input-width {
+            max-width: 800px;
+        }
+
+        .offset-right {
+            margin-left: 15%;
+            margin-right: 0;
+        }
+
+        #verificationModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        #verificationModalContent {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+    </style>
+</head>
+<body class="bg-body-tertiary">
+
+<div class="py-5 text-center d-flex justify-content-center align-items-center">
+    <img src="/images/images2.png" alt="Gym Mascot" width="100" height="100" class="mr-3">
+    <div class="text-left" style="margin-left: 20px;">
+        <h2 class="logo">짐렛고</h2>
+        <p class="lead">짐렛고에 오신걸 환영합니다. 회원님의 정보를 입력해주세요.</p>
+    </div>
+</div>
+
+<div class="row justify-content-center offset-right">
+    <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">회원 정보 수정</h4>
+        <form class="needs-validation" th:action th:object="${memberDeleteForm}" method="post" novalidate>
+            <div class="row g-3">
+
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                       th:text="${err}">글로벌 오류 메시지</p>
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="text" class="form-control custom-input-width" th:field="*{email}" id="email" placeholder="이메일을 입력해주세요." required>
+                    <button class="btn btn-outline-secondary btn btn-primary" type="button" id="emailOverlay" onclick="emailCheck()">이메일 확인</button>
+                    <button class="btn btn-outline-secondary btn btn-primary" type="button" id="resetEmail" onclick="reEmail()" disabled value="다시입력">다시 입력</button>
+                    <button class="btn btn-outline-secondary btn btn-primary" type="button" id="sendEmail" onclick="sendEmails()" disabled>이메일 인증</button>
+                    <div class="field-error" th:errors="*{email}"></div>
+                    <div class="invalid-feedback">
+                        유효한 이메일을 입력하세요.
+                    </div>
+                </div>
+
+            </div>
+            <hr class="my-4">
+            <button class="w-100 btn btn-primary btn-lg" id="submitButton" type="submit"  disabled>탈퇴하기</button>
+        </form>
+    </div>
+</div>
+
+<div id="verificationModal">
+    <div id="verificationModalContent">
+        <span>인증 코드를 입력하세요:</span>
+        <input type="text" id="verificationCode" placeholder="인증 코드">
+        <button type="button" class="btn btn-primary mt-2" onclick="verifyCode()">확인</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    function emailCheck() {
+        const email = $("#email").val();
+         console.log("Checking email:", email);
+        if (email == "") {
+            alert("이메일은 필수항목입니다!");
+            $("#email").focus();
+            return false;
+        }
+
+        $.ajax({
+            type: "get",
+            url: "/api/checkEmail",
+            data: { "email": email },
+            dataType: "JSON",
+            success: function (result) {
+                if (result === true) {
+                    alert("존재하는 회원입니다.");
+
+                    $("#email").attr("readonly", true);
+                    $("#emailOverlay").attr("disabled", true);
+                    $("#emailOverlay").css("display", "none");
+                    $("#resetEmail").attr("disabled", false);
+                    $("#resetEmail").css("display", "inline-block");
+                    $("#sendEmail").attr("disabled", false);
+
+                    return false;
+                } else if (result === false) {
+                    alert("존재하지 않는 이메일입니다.");
+                    $("#email").focus();
+                    $('#email').val('').focus();
+                } else {
+                    alert("성공했지만 결과 값이 잘못되었습니다.");
+                }
+            },
+            error: function (request, status, error) {
+                alert("AJAX 실행 실패");
+                alert("code:" + request.status + "\n" + "error :" + error);
+            }
+        });
+    }
+
+    function reEmail() {
+        $('#email').attr('readonly', false);
+        $('#email').val('');
+        $('#emailOverlay').attr('disabled', false);
+        $('#emailOverlay').css('display', 'inline-block');
+        $('#resetEmail').prop('disabled', true);
+        $('#sendEmail').prop('disabled', true);
+        $("#submitButton").attr("disabled", true);
+    }
+
+    function sendEmails() {
+        var email = $('#email').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/mailSend',
+            data: { mail: email },
+            success: function(response) {
+                if (response.success) {
+                    alert('이메일 전송 완료!!');
+                    showVerificationPopup(); // 팝업 창 띄우기
+                } else {
+                    alert('이메일 전송 실패 ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + error);
+            }
+        });
+    }
+
+    function showVerificationPopup() {
+        $('#verificationModal').show();
+    }
+
+    function verifyCode() {
+
+        var verificationCode = $('#verificationCode').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/verifyCode',
+            data: { code: verificationCode },
+            success: function(response) {
+                if (response.success) {
+                    alert('인증 성공!');
+                    $('#verificationModal').hide();
+                    $("#submitButton").attr("disabled", false);
+                } else {
+                    alert('인증 실패: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + error);
+            }
+        });
+    }
+</script>
+</body>
+</html>
+

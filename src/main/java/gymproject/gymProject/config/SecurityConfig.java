@@ -38,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup", "/", "/api/**", "/mailSend/**","/verifyCode", "/profiles/**").permitAll() // 인증 없이 접근 허용할 경로
+                        .requestMatchers("/login", "/signup", "/", "/api/**", "/mailSend/**","/verifyCode", "/profiles/**", "/images/**").permitAll() // 인증 없이 접근 허용할 경로
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 .formLogin(form -> form

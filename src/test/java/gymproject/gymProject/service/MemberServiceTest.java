@@ -1,21 +1,20 @@
 package gymproject.gymProject.service;
 
 import gymproject.gymProject.entity.Enum.Role;
-import gymproject.gymProject.entity.Form.MemberForm;
-import gymproject.gymProject.entity.Form.MemberModifyForm;
+import gymproject.gymProject.entity.Dto.Form.MemberForm;
+import gymproject.gymProject.entity.Dto.Form.MemberModifyForm;
 import gymproject.gymProject.entity.Likes;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.Review;
 import gymproject.gymProject.entity.exception.DuplicatePasswordException;
+import gymproject.gymProject.entity.exception.MemberNotFoundException;
 import gymproject.gymProject.repogitory.MemberRepository;
-import jakarta.persistence.AssociationOverride;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -134,6 +133,31 @@ class MemberServiceTest {
 
         //then
         Assertions.assertThat(findMember.getName()).isEqualTo("리중딱");
+    }
+
+    @Test
+    public void 회원탈퇴() throws Exception {
+       //given
+        MemberForm memberForm1 = makeForm();
+
+        Member member1 = memberService.alertMember(memberForm1);
+
+        //when
+        Long id = memberService.createMember(member1);
+
+        entityManager.flush();
+        entityManager.clear();
+
+
+       //when
+        memberService.deleteMember(id);
+
+        entityManager.flush();
+        entityManager.clear();
+
+
+        //then
+        Assertions.assertThatThrownBy(() -> memberService.findMemberById(id)).isInstanceOf(MemberNotFoundException.class);
     }
 
     private static MemberForm makeForm() {
