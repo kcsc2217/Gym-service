@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org"
+      xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <title>Profile View</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-family: "Black Han Sans", sans-serif;
+            color: #ffd700;
+            font-weight: 400;
+        }
+
+        .lead {
+            font-size: 1.5rem;
+            font-family: "Black Han Sans", sans-serif;
+            font-weight: 400;
+            color: #000000;
+        }
+
+        .btn-primary {
+            background-color: #ffd700;
+            border-color: #ffd700;
+            font-weight: bold;
+        }
+
+        .profile-container {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .profile-details {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-details h4 {
+            font-family: "Noto Sans KR", sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .profile-details p {
+            font-size: 1.1rem;
+            font-family: "Noto Sans KR", sans-serif;
+            color: #333;
+        }
+
+        .profile-details .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+         a.logo {
+            text-decoration: none; /* 링크 밑줄 제거 */
+        }
+    </style>
+</head>
+<body class="bg-body-tertiary">
+
+<div class="py-5 text-center" >
+    <a th:href="@{/}" class="logo">
+    <img src="/images/images2.png" alt="Gym Mascot" width="100" height="100" class="mr-3">
+    <div class="text-left" style="margin-left: 20px;">
+        <h2 class="logo">짐렛고</h2>
+        <p class="lead">회원님의 프로필 정보를 확인하세요.</p>
+    </div>
+    </a>
+</div>
+
+<div class="profile-container">
+    <div class="profile-details">
+        <img th:src="@{'/image/' + ${profile.storedFileName}}" class="img-thumbnail profile-image" alt="Profile Image" data-bs-toggle="modal" data-bs-target="#profileImageModal">
+        <h4>프로필 정보</h4>
+        <p><span class="info-label">이름:</span> <span th:text="${profile.name}">홍길동</span></p>
+        <p><span class="info-label">나이:</span> <span th:text="${profile.age}">30</span></p>
+        <p><span class="info-label">성별:</span> <span th:text="${profile.gender}">남성</span></p>
+        <p><span class="info-label">키:</span> <span th:text="${profile.height}">170cm</span></p>
+        <p><span class="info-label">몸무게:</span> <span th:text="${profile.weight}">70kg</span></p>
+        <p><span class="info-label">운동 목표:</span> <span th:text="${profile.exercise_goal}">체력 향상</span></p>
+        <p><span class="info-label">운동 강도:</span> <span th:text="${profile.exerciseIntensity}">중간</span></p>
+        <p><span class="info-label">운동 경험:</span> <span th:text="${profile.exerciseExperience}">초보자</span></p>
+        <button class="btn btn-primary mt-4" type="button" onclick="location.href='/profiles/edit'">프로필 수정</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileImageModalLabel">프로필 이미지</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img th:src="@{'/image/' + ${profile.storedFileName}}" class="img-fluid" alt="Profile Image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>

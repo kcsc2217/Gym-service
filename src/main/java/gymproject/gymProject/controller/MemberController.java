@@ -8,6 +8,7 @@ import gymproject.gymProject.entity.Dto.Form.MemberLoginForm;
 import gymproject.gymProject.entity.Dto.Form.MemberModifyForm;
 import gymproject.gymProject.entity.Member;
 import gymproject.gymProject.entity.exception.DuplicatePasswordException;
+import gymproject.gymProject.entity.exception.MemberNotFoundException;
 import gymproject.gymProject.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +82,9 @@ public class MemberController {
             return "redirect:/login";
         }else{
             Member findMember = customUserDetails.getMember();
+            Member member = memberService.findMemberById(findMember.getId());
 
-            model.addAttribute("memberUpdateForm", new MemberModifyForm(findMember));
+            model.addAttribute("memberModifyForm", new MemberModifyForm(member));
 
         }
 
@@ -91,16 +93,28 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public String update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @Valid @ModelAttribute MemberModifyForm memberModifyForm){
-        if(customUserDetails == null){
+    public String update( @Valid @ModelAttribute MemberModifyForm memberModifyForm,
+                          BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        if (bindingResult.hasErrors()) {
+            log.info("필드 에러 발생");
+            return "members/update";
+        }
+            if(customUserDetails == null){
             return "redirect:/login";
-        }else{
+        }
+            log.info("회원 존재");
             Member member = customUserDetails.getMember();
 
-            memberService.modify(member.getId(), memberModifyForm);
-        }
+            try{
+                memberService.modify(member.getId(), memberModifyForm);
+                return "redirect:/";
+            }catch (MemberNotFoundException e){
+                bindingResult.reject("errors", e.getMessage());
+                return "members/update";
+            }
 
-        return "redirect:/";
+
+
 
     }
 
@@ -110,17 +124,29 @@ public class MemberController {
     }
 
     @PostMapping("/delete")
-    public String delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @Valid @ModelAttribute MemberDeleteForm memberDeleteForm){
+    public String delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                         @Valid @ModelAttribute MemberDeleteForm memberDeleteForm,
+                         BindingResult bindingResult) {
 
-        if(customUserDetails == null){
-            return "redirect:/login";
-        }else{
-            log.info("회원 존재");
-            Member member = customUserDetails.getMember();
-            memberService.deleteMember(member.getId());
+        if (bindingResult.hasErrors()) {
+            log.info("필드 에러 발생");
+            return "members/delete";
         }
 
-        return "redirect:/login";
+        if (customUserDetails == null) {
+            return "redirect:/login";
+        }
+
+        log.info("회원 존재");
+        Member member = customUserDetails.getMember();
+
+        try {
+            memberService.deleteMember(member.getId());
+            return "redirect:/login"; // 성공 메시지를 표시하는 페이지로 리디렉션
+        } catch (MemberNotFoundException e) {
+            bindingResult.reject("errors", e.getMessage());
+            return "members/delete";
+        }
     }
 
 

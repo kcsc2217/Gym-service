@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.MalformedURLException;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class HomeController {
     private final MemberRepository memberRepository;
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model){
+    public String home(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model, RedirectAttributes redirectAttributes){
 
 
         if(customUserDetails == null){
@@ -39,14 +40,18 @@ public class HomeController {
         }
         else{
             Member member = customUserDetails.getMember();
-            Member findMember = memberRepository.findByIdWithProfile(member.getId()).orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다"));
 
-            MemberHomeDto memberHomeDto = new MemberHomeDto(findMember);
+            try{
+                Member findMember = memberRepository.findByIdWithProfile(member.getId()).orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다"));
+                MemberHomeDto memberHomeDto = new MemberHomeDto(findMember);
 
-            model.addAttribute("memberHomeDto", memberHomeDto);
+                model.addAttribute("memberHomeDto", memberHomeDto);
+            }catch (MemberNotFoundException e){
+                redirectAttributes.addFlashAttribute("globalErrors", e.getMessage());
+                return "redirect:/login";
+            }
 
         }
-
 
 
         return "index";
@@ -56,6 +61,7 @@ public class HomeController {
     @GetMapping("/image/{filename}")
     public Resource loadImage(@PathVariable String filename) throws MalformedURLException {
         String fullPath = fileStore.getFullPath(filename);
+        log.info("파일 컨트롤러 통과");
         return new UrlResource("file:" + fileStore.getFullPath(filename));
     }
 

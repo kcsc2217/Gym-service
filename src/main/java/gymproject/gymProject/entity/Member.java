@@ -1,6 +1,8 @@
 package gymproject.gymProject.entity;
 
 
+import gymproject.gymProject.entity.Dto.Form.ProfileUpdateForm;
+import gymproject.gymProject.entity.Enum.Gender;
 import gymproject.gymProject.entity.Enum.Role;
 import gymproject.gymProject.entity.Dto.Form.MemberModifyForm;
 import gymproject.gymProject.entity.address.Address;
@@ -80,6 +82,13 @@ public class Member extends BaseEntity {
     public void setProfile(Profile profile){
         this.profile =profile;
         profile.setMember(this);
+    }
+
+
+
+    public void updateProfile(ProfileUpdateForm profileUpdateForm){
+        this.name = profileUpdateForm.getName();
+        this.profile.updateContent(profileUpdateForm);
     }
 
 

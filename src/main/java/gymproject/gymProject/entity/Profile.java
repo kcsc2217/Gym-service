@@ -2,6 +2,7 @@ package gymproject.gymProject.entity;
 
 
 import gymproject.gymProject.File.UploadFile;
+import gymproject.gymProject.entity.Dto.Form.ProfileUpdateForm;
 import gymproject.gymProject.entity.Enum.ExerciseExperience;
 import gymproject.gymProject.entity.Enum.ExerciseIntensity;
 import gymproject.gymProject.entity.Enum.Gender;
@@ -65,9 +66,24 @@ public class Profile extends BaseEntity {
         this.uploadFile = uploadFile;
     }
 
+    public void updateContent(ProfileUpdateForm profileUpdateForm){
+        this.gender = profileUpdateForm.getGender();
+        this.age = profileUpdateForm.getAge();
+        this.exerciseExperience = profileUpdateForm.getExerciseExperience();
+        this.exerciseIntensity = profileUpdateForm.getExerciseIntensity();
+        this.weight = profileUpdateForm.getWeight();
+        this.height = profileUpdateForm.getHeight();
+        this.exercise_goal = profileUpdateForm.getExercise_goal();
+        this.uploadFile.setStoreFileName(profileUpdateForm.getStoredFileName());
+        this.uploadFile.setUploadFileName(profileUpdateForm.getUploadFileName());
+    }
 
     public  void setMember(Member member){
         this.member = member;
+    }
+
+    public void setGender(Gender gender){
+        this.gender = gender;
     }
 
 

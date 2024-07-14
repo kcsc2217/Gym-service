@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org"
-      xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <meta charset="utf-8">
@@ -16,11 +15,7 @@
 
         body {
             background-color: #f8f9fa;
-        }
-
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         .logo {
@@ -28,113 +23,119 @@
             font-family: "Black Han Sans", sans-serif;
             color: #ffd700;
             font-weight: 400;
-            font-style: normal;
         }
 
         .lead {
             font-size: 1.5rem;
-            font-family: "Black Han Sans", sans-serif;
             font-weight: 400;
-            color: #000000;
+            color: #000;
         }
 
         .btn-primary {
             background-color: #ffd700;
             border-color: #ffd700;
             font-weight: bold;
-        }
-
-        .custom-input-width {
-            max-width: 800px;
-        }
-
-        .offset-right {
-            margin-left: 15%;
-            margin-right: 0;
-        }
-
-        .profile-container {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-bottom: 20px;
-            border-radius: 50%;
-        }
-
-        .upload-button {
             margin-top: 20px;
         }
 
-        .hidden-input {
-            display: none;
+        .profile-container {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-image-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .placeholder-image {
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            height: 100%;
             background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 2px dashed #ddd;
             color: #aaa;
-            margin: 0 auto;
-            cursor: pointer;
             border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
         }
 
-        .placeholder-image:hover {
-            background-color: #e0e0e0;
+        .hidden-input {
+            display: none;
         }
 
         .form-label {
             font-weight: bold;
         }
 
-        .invalid-feedback {
-            font-size: 0.875em;
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
         }
 
-        .profile-container h2 {
-            margin-bottom: 20px;
-            font-family: "Noto Sans KR", sans-serif;
+        .invalid-feedback {
+            font-size: 0.875em;
         }
     </style>
 </head>
 <body class="bg-body-tertiary">
 
 <div class="py-5 text-center">
-    <img src="/images/images2.png" alt="Gym Mascot" width="100" height="100" class="mr-3">
-    <div class="text-left" style="margin-left: 20px;">
-        <h2 class="logo">짐렛고</h2>
-        <p class="lead">짐렛고에 오신걸 환영합니다. 회원님의 프로필 정보를 입력해주세요.</p>
-    </div>
+    <a th:href="@{/}" class="logo">
+        <img src="/images/images2.png" alt="Gym Mascot" width="100" height="100" class="mr-3">
+        <div class="text-left" style="margin-left: 20px;">
+            <h2 class="logo">짐렛고</h2>
+        </div>
+    </a>
+    <p class="lead">프로필 정보를 수정하세요.</p>
 </div>
 
-<div class="row justify-content-center offset-right">
-    <div class="col-md-7 col-lg-8">
-        <h4 class="mb-3">프로필 정보 등록</h4>
-        <form class="needs-validation" th:action="@{/profiles/new/{id}(id=${id})}" th:object="${profileForm}" method="post" enctype="multipart/form-data" novalidate>
+<div class="profile-container">
+    <div class="profile-details">
+        <form class="needs-validation" th:action th:object="${profileUpdateForm}" method="post" enctype="multipart/form-data" novalidate>
             <div class="row g-3">
-
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <p class="field-error" th:each="err : ${#fields.globalErrors()}"
                        th:text="${err}">글로벌 오류 메시지</p>
                 </div>
 
-                <div class="container profile-container">
-                    <h2 class="mb-3">프로필 이미지</h2>
+                <div class="profile-image-container">
                     <div class="placeholder-image" id="placeholderImage" onclick="document.getElementById('profileImageInput').click()">
                         <span>이미지 선택</span>
                     </div>
-                    <img src="/images/default-image.png" class="img-thumbnail profile-image d-none" alt="Profile Image" id="profileImage">
-                    <input type="file" id="profileImageInput" th:field="*{multipartFile}" class="hidden-input" accept="image/*">
-                    <button class="btn btn-primary upload-button" type="button" onclick="document.getElementById('profileImageInput').click()">이미지 등록</button>
+                    <img th:src="@{'/image/' + ${profileUpdateForm.storedFileName}}" alt="Profile Image" id="profileImage" class="profile-image">
+                </div>
+                <input type="file" id="profileImageInput" th:field="*{multipartFile}" class="hidden-input" accept="image/*">
+                <button class="btn btn-primary upload-button" type="button" onclick="document.getElementById('profileImageInput').click()">이미지 등록</button>
+
+                <div class="col-12">
+                    <label for="name" class="form-label">이름</label>
+                    <input type="text" class="form-control custom-input-width" th:field="*{name}" id="name" placeholder="이름을 입력하세요" required>
+                    <div class="field-error" th:errors="*{name}"></div>
+                    <div class="invalid-feedback">
+                        유효한 이름을 입력하세요.
+                    </div>
                 </div>
 
                 <div class="col-12">
@@ -148,10 +149,10 @@
 
                 <div class="col-12">
                     <label for="height" class="form-label">키</label>
-                    <input type="text" class="form-control custom-input-width" th:field="*{height}" id="height" placeholder="키를 입력하세요 (예: 170cm)" pattern="\d+cm" required>
+                    <input type="text" class="form-control custom-input-width" th:field="*{height}" id="height" placeholder="키를 입력하세요 (예: 170cm)" required>
                     <div class="field-error" th:errors="*{height}"></div>
                     <div class="invalid-feedback">
-                        유효한 키를 "숫자cm" 형식으로 입력하세요 (예: 170cm).
+                        유효한 키를 입력하세요.
                     </div>
                 </div>
 
@@ -218,16 +219,27 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
-                document.getElementById('profileImage').classList.remove('d-none');
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = e.target.result;
+                profileImage.classList.remove('d-none');
                 document.getElementById('placeholderImage').classList.add('d-none');
             };
             reader.readAsDataURL(file);
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileImage = document.getElementById('profileImage');
+        if (profileImage.src && !profileImage.src.includes('default-image.png')) {
+            profileImage.classList.remove('d-none');
+            document.getElementById('placeholderImage').classList.add('d-none');
+        }
+    });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"></script>
 
 </body>
 </html>
+
+

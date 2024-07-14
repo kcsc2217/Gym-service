@@ -17,7 +17,7 @@ public class ProfileForm {
     @NotNull(message = "나이는 필수입니다.")
     private int age; //나이
 
-    @NotEmpty(message = "나이를 입력하세요")
+    @NotEmpty(message = "운동 목표를 입력해주세요")
     private String exercise_goal; //운동 목표
 
     @NotNull(message = "운동 강도체크는 필수입니다.")
