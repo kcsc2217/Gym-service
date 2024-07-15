@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer configure(){
         return (web) -> web.ignoring()
-                .requestMatchers("/static/**","/images/**");  // /static/** 경로에 있는 정적 자원에 대한 요청을 시큐리티 필터 체인에서 제외 css,js등 필터 정적 리소스 제외
+                .requestMatchers("/static/**","/images/**","/api/**");  // /static/** 경로에 있는 정적 자원에 대한 요청을 시큐리티 필터 체인에서 제외 css,js등 필터 정적 리소스 제외
     }
 
 
