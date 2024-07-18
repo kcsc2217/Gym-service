@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class GymProjectApplication implements CommandLineRunner {
+public class GymProjectApplication  {
 
 	@Autowired
 	private GymService gymService;
@@ -27,12 +27,12 @@ public class GymProjectApplication implements CommandLineRunner {
 		SpringApplication.run(GymProjectApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		String jsonResponse = ApiRequest.getApiResponse(
-				"DAdIB7IH45PyJGrEXkp1rsg9CWlIEpT77AVMZ9DxR6zKXw6JHKarUgV3YM7Qk6LMeMd5yA2a0ylVtPe69Sq81Q%3D%3D");
-		List<Gym> dataList = JsonParser.parseData(jsonResponse);
-		gymService.saveAll(dataList);
-	}
+//	@Override
+//	public void run(String... args) throws Exception {
+//		String jsonResponse = ApiRequest.getApiResponse(
+//				"DAdIB7IH45PyJGrEXkp1rsg9CWlIEpT77AVMZ9DxR6zKXw6JHKarUgV3YM7Qk6LMeMd5yA2a0ylVtPe69Sq81Q%3D%3D");
+//		List<Gym> dataList = JsonParser.parseData(jsonResponse);
+//		gymService.saveAll(dataList);
+//	}
 
 }

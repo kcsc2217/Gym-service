@@ -80,7 +80,7 @@ public class ProfileController {
 
         try{
 
-            Member findMember = memberService.findMemberById(member.getId()); // 멤버 뽑기
+            Member findMember = memberRepository.findByIdWithProfile(member.getId()).orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다"));// 멤버 뽑기
             ProfileHomeDto profileHomeDto = new ProfileHomeDto(findMember);
 
             log.info("homeDto 생성 완료");
@@ -90,6 +90,7 @@ public class ProfileController {
             return "/profiles/information";
 
         }catch (MemberNotFoundException e){
+            log.info("해당 회원을 찾을 수 없습니다.");
             return "redirect:/";
 
         }

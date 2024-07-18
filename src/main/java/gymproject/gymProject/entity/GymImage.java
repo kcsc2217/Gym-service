@@ -20,8 +20,13 @@ public class GymImage {
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
-    public GymImage(String imagePath, Gym gym) {
+    public GymImage(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public void setGym(Gym gym){
         this.gym = gym;
     }
+
+
 }
