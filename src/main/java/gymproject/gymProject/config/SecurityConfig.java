@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer configure(){
         return (web) -> web.ignoring()
-                .requestMatchers("/static/**","/images/**","/api/**");  // /static/** 경로에 있는 정적 자원에 대한 요청을 시큐리티 필터 체인에서 제외 css,js등 필터 정적 리소스 제외
+                .requestMatchers("/static/**","/images/**","/api/**");  // /static/** 경로에 있는 정적 자원에 대한 요청을 시큐리티 필터 체인에서 제외 css,js등 필터 정적 리소스 제외 -> 필터 체인을 들리지 않음
     }
 
 
@@ -38,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup", "/", "/api/**", "/mailSend/**","/verifyCode", "/profiles/**", "/images/**").permitAll() // 인증 없이 접근 허용할 경로
+                        .requestMatchers("/login", "/signup", "/", "/api/**", "/mailSend/**","/verifyCode", "/profiles/**", "/image/**", "/gyms/**").permitAll() // 인증 없이 접근 허용할 경로
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 .formLogin(form -> form

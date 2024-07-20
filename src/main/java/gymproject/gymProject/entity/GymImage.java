@@ -12,11 +12,12 @@ public class GymImage {
 
     @Id
     @GeneratedValue
+    @Column(name = "gymImage_id")
     private Long id;
 
     private String imagePath;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gym_id")
     private Gym gym;
 

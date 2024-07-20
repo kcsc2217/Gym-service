@@ -33,8 +33,8 @@ import java.util.List;
         @OneToMany(mappedBy = "gym")
         List<UserGym> userGymList = new ArrayList<>(); //연관관계
 
-        @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
-        List<GymImage> gymImageList = new ArrayList<>();  //여러 사진들 경로를 디비에 저장
+        @OneToOne(mappedBy = "gym", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+        private GymImage gymImage ;
 
 
         private String operating_our; //추후에 넣을 예정
@@ -50,7 +50,7 @@ import java.util.List;
         }
 
         public void addGymImage(GymImage gymImage){
-            gymImageList.add(gymImage);
+            this.gymImage = gymImage;
             gymImage.setGym(this);
         }
     }

@@ -91,8 +91,10 @@
         }
 
         .card-img-top {
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            width: 100%;
+            height: 250px; /* 원하는 높이로 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 잘라내기 */
+            object-position: center; /* 중앙을 기준으로 잘라내기 */
         }
 
         .card-body {
@@ -245,15 +247,14 @@
 
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div class="col">
+            <div id="gym-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col" th:each="gym : ${gyms}">
                     <div class="card shadow-sm">
-                        <img src="https://via.placeholder.com/300x200" class="bd-placeholder-img card-img-top" alt="Product Image">
+                        <img th:src="@{'/image/' + ${gym.storePath}}" class="bd-placeholder-img card-img-top" alt="Gym Image">
                         <div class="card-body">
-                            <h5 class="product-title">헬스장 이름</h5>
-                            <p class="card-text">주소: 헬스장 주소</p>
-                            <p class="card-text">연락처: 헬스장 연락처</p>
-                            <p class="card-text">운영시간: 헬스장 운영시간</p>
+                            <h5 class="product-title" th:text="${gym.gymName}">헬스장 이름</h5>
+                            <p class="card-text" th:text="'주소: ' + ${gym.address}">주소: 헬스장 주소</p>
+                            <p class="card-text" th:if="${gym.contact != null}" th:text="'연락처: ' + ${gym.contact ?: '없음'}">연락처: 없음</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">리뷰 보기</button>
@@ -264,25 +265,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img src="https://via.placeholder.com/300x200" class="bd-placeholder-img card-img-top" alt="Product Image">
-                        <div class="card-body">
-                            <h5 class="product-title">헬스장 이름</h5>
-                            <p class="card-text">주소: 헬스장 주소</p>
-                            <p class="card-text">연락처: 헬스장 연락처</p>
-                            <p class="card-text">운영시간: 헬스장 운영시간</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">리뷰 보기</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">헬스장 정보</button>
-                                </div>
-                                <small class="product-price">평점: ★★★★☆</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 추가 헬스장 카드들 -->
             </div>
         </div>
     </div>
@@ -299,6 +281,60 @@
     </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+    let currentPage = 0;
+    const size = 10;
+    let loading = false;
+    let hasNext =true;
+
+    function loadMoreGyms() {
+        if (loading || !hasNext) return;
+        loading = true;
+
+        fetch(`/gyms?page=${currentPage + 1}&size=${size}`)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('gym-container');
+                data.content.forEach(gym => {
+                    const gymElement = document.createElement('div');
+                    gymElement.className = 'col';
+                    gymElement.innerHTML = `
+                            <div class="card shadow-sm">
+                                <img src="/image/${gym.storePath}" class="bd-placeholder-img card-img-top" alt="Gym Image">
+                                <div class="card-body">
+                                    <h5 class="product-title">${gym.gymName}</h5>
+                                    <p class="card-text">주소: ${gym.address}</p>
+                                    ${gym.contact ? `<p class="card-text">연락처: ${gym.contact}</p>` : '<p class="card-text">연락처: 없음</p>'}
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">리뷰 보기</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">헬스장 정보</button>
+                                        </div>
+                                        <small class="product-price">평점: ★★★★☆</small>
+                                    </div>
+                                </div>
+                            </div>`;
+                    container.appendChild(gymElement);
+                });
+                currentPage++;
+                hasNext = !data.last; // Slice 객체의 마지막 페이지 여부 확인
+                loading = false;
+            });
+    }
+
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            loadMoreGyms();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const loadingElement = document.getElementById('loading');
+        loadingElement.style.display = hasNext ? 'block' : 'none';
+        loadMoreGyms(); // Load initial gyms on page load
+    });
+</script>
 
 </body>
 </html>
