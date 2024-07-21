@@ -27,14 +27,14 @@ import java.util.List;
         private String address;
 
         @OneToMany(mappedBy = "gym")
-        List<Review> rivewlist = new ArrayList<>();
+       private  List<Review> rivewlist = new ArrayList<>();
 
 
         @OneToMany(mappedBy = "gym")
-        List<UserGym> userGymList = new ArrayList<>(); //연관관계
+       private List<UserGym> userGymList = new ArrayList<>(); //연관관계
 
-        @OneToOne(mappedBy = "gym", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-        private GymImage gymImage ;
+        @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<GymImage> gymImageList = new ArrayList<>();
 
 
         private String operating_our; //추후에 넣을 예정
@@ -50,7 +50,7 @@ import java.util.List;
         }
 
         public void addGymImage(GymImage gymImage){
-            this.gymImage = gymImage;
+            this.gymImageList.add(gymImage);
             gymImage.setGym(this);
         }
     }

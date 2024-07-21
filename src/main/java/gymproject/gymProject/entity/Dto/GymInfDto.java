@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class GymInfDto {
 
+    private Long id;
+
     private String gymName;
 
     private String address;
@@ -16,10 +18,11 @@ public class GymInfDto {
     private String storePath;
 
     public GymInfDto(Gym gym) {
+        this.id = gym.getId();
         this.gymName = gym.getGymName();
         this.address = gym.getAddress();
         this.contact = gym.getContact_info();
-        this.storePath = gym.getGymImage().getImagePath();
+        this.storePath = gym.getGymImageList().get(0).getImagePath();
     }
 
     public GymInfDto() {
