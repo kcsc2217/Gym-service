@@ -15,7 +15,8 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
     Slice<Gym> findByGymAndGymList(Pageable pageable);
 
 
-    @Query("select  distinct  g from Gym g join fetch g.gymImageList WHERE g.id = :id")
+    // 헬스장 하나 조회 할때
+    @Query("select  distinct  g from Gym g left join fetch g.gymImageList WHERE g.id = :id")
     Optional<Gym> findFetchByGymId(Long id);
 
 }

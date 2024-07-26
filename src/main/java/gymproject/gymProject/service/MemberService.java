@@ -62,7 +62,7 @@ public class MemberService{
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found with id: " + memberId));
 
-        UploadFile uploadFile = fileStore.storeFile(profileForm.getMultipartFile());
+        UploadFile uploadFile = alterUploadRile(profileForm);
 
         //연관관계 설정
         Profile profile = profileService.alterProfile(profileForm, uploadFile);
@@ -73,6 +73,11 @@ public class MemberService{
 
 
 
+    }
+
+    private UploadFile alterUploadRile(ProfileForm profileForm) throws IOException {
+        UploadFile uploadFile = fileStore.storeFile(profileForm.getMultipartFile());
+        return uploadFile;
     }
 
     @Transactional

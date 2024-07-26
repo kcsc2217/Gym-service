@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing // 스프링 부트 설정 클래스에 적용함(createdateTime)
 public class GymProjectApplication  {
 
 	@Autowired

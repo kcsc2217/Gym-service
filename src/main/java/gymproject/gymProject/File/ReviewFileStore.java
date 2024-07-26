@@ -1,6 +1,5 @@
 package gymproject.gymProject.File;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,9 +11,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class FileStore {
-
-    @Value("${file.dir[0]}")
+public class ReviewFileStore {
+    @Value("${file.dir[1]}")
     private String fileDir;
 
     public String getFullPath(String filename){
@@ -62,6 +60,5 @@ public class FileStore {
 
         return originalFileName.substring(pos+1);
     }
-
 
 }

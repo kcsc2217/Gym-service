@@ -30,7 +30,9 @@ spring:
         format_sql: true
 
 file:
-  dir: C:/Users/YWJEONG/project/gymUpload
+  dir:
+  - C:/Users/YWJEONG/project/gymUpload/
+  - C:/Users/YWJEONG/project/reviewUpload/
 
 
 logging.level:

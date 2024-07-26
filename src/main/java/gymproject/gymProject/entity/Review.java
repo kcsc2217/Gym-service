@@ -1,6 +1,7 @@
 package gymproject.gymProject.entity;
 
 
+import gymproject.gymProject.File.UploadFile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,9 +30,13 @@ public class Review extends BaseEntity{
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
-    public Review(String content, int rating, Member member, Gym gym) {
+    private UploadFile uploadFile; // 파일 경로 저장
+
+
+    public Review(String content, int rating,UploadFile uploadFile ,Member member, Gym gym) {
         this.content = content;
         this.rating = rating;
+        this.uploadFile = uploadFile;
         setMember(member);
         setGym(gym);
     }
@@ -39,7 +44,8 @@ public class Review extends BaseEntity{
     public Review(String content, int rating, Member member) {
         this.content = content;
         this.rating = rating;
-        this.member = member;
+        setMember(member);
+
     }
 
     public void setMember(Member member){

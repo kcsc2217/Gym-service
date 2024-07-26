@@ -36,7 +36,6 @@ import java.util.List;
         @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)
         private List<GymImage> gymImageList = new ArrayList<>();
 
-
         private String operating_our; //추후에 넣을 예정
 
         public Gym(String gymName, String contact_info, String address) {

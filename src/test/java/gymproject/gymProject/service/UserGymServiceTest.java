@@ -70,18 +70,4 @@ class UserGymServiceTest {
 
 
     }
-
-    @Test
-    @Rollback(false)
-    public void 테스트데이터넣기() throws Exception {
-        //given
-        userGymService.save(1L, 1L);
-        userGymService.save(1L, 2L);
-
-
-    }
-
-
-
-
 }
