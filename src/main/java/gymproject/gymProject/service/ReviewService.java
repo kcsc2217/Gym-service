@@ -37,7 +37,7 @@ public class ReviewService {
             Gym findGym = gymRepository.findById(gymId).orElseThrow(() -> new GymNotFoundException("해당 헬스장은 없습니다"));
             UploadFile uploadFile = alterUploadFile(reviewForm);
 
-            Review review = new Review(reviewForm.getContent(), reviewForm.getRating(), uploadFile, findMember, findGym);
+            Review review = new Review(reviewForm, uploadFile, findMember, findGym);
 
             Review saveReview = reviewRepository.save(review);
 

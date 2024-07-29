@@ -2,6 +2,7 @@ package gymproject.gymProject.entity;
 
 
 import gymproject.gymProject.File.UploadFile;
+import gymproject.gymProject.entity.Dto.Form.ReviewForm;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,9 +34,9 @@ public class Review extends BaseEntity{
     private UploadFile uploadFile; // 파일 경로 저장
 
 
-    public Review(String content, int rating,UploadFile uploadFile ,Member member, Gym gym) {
-        this.content = content;
-        this.rating = rating;
+    public Review(ReviewForm reviewForm, UploadFile uploadFile , Member member, Gym gym) {
+        this.content = reviewForm.getContent();
+        this.rating = reviewForm.getRating();
         this.uploadFile = uploadFile;
         setMember(member);
         setGym(gym);

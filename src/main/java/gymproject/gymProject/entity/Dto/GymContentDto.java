@@ -12,6 +12,8 @@ import java.util.List;
 
 public class GymContentDto {
 
+    private Long id;
+
     private String gymName;
 
     private String contact_info;
@@ -21,6 +23,7 @@ public class GymContentDto {
     private List<String> storedFiles;
 
     public GymContentDto(Gym gym) {
+        this.id = gym.getId();
         this.gymName = gym.getGymName();
         this.contact_info = gym.getContact_info();
         this.address = gym.getAddress();

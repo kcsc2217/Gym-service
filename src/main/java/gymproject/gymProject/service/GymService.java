@@ -5,6 +5,7 @@ import gymproject.gymProject.entity.Gym;
 import gymproject.gymProject.entity.GymImage;
 import gymproject.gymProject.repogitory.GymImageRepository;
 import gymproject.gymProject.repogitory.GymRepository;
+import gymproject.gymProject.repogitory.UserGymRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import static java.util.stream.Collectors.toList;
 public class GymService {
     private final GymRepository gymRepository;
     private final GymImageRepository gymImageRepository;
+    private final UserGymRepository userGymRepository;
 
     @Transactional
     public void saveAll(List<Gym> dataList){
@@ -45,8 +47,8 @@ public class GymService {
 
     }
 
-
-
-
+    public boolean existsGymAndUser(Long memberId,  Long gymId){
+       return  userGymRepository.existsByMemberIdAndGymId(memberId, gymId);
+    }
 
 }
